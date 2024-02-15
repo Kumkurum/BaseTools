@@ -6,10 +6,18 @@
 #include "Impl_ByteArray.h"
 #include "../include/BaseTools/Debug.h"
 namespace BaseTools {
-    ByteArray::ByteArray(char *data, std::size_t size): _pImpl(std::make_unique<Impl_ByteArray>(reinterpret_cast<std::byte*>(data), size)){
+    ByteArray::ByteArray(const char *data, std::size_t size): _pImpl(std::make_unique<Impl_ByteArray>(reinterpret_cast<const std::byte*>(data), size)){
     }
-
-    ByteArray::ByteArray(char symbol, std::size_t size): _pImpl(std::make_unique<Impl_ByteArray>(symbol, size)){
+    ByteArray::ByteArray(const char *data){
+        auto size{0};
+        auto ptr = data;
+        while (*ptr != '\0'){
+            ++size;
+            ++ptr;
+        }
+        _pImpl = std::make_unique<Impl_ByteArray>(reinterpret_cast<const std::byte*>(data), size);
+    }
+    ByteArray::ByteArray(const char symbol, std::size_t size): _pImpl(std::make_unique<Impl_ByteArray>(symbol, size)){
     }
 
     ByteArray::~ByteArray() = default;

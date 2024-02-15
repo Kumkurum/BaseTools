@@ -4,6 +4,7 @@
 #include "Tests.h"
 #include "../include/BaseTools/ByteArray.h"
 #include "../include/BaseTools/Debug.h"
+#include <string>
 using namespace BaseTools;
 TEST(Test_ByteArray, 0) {
     ByteArray bytes("s",1) ;
@@ -84,9 +85,7 @@ TEST(Test_ByteArray, 7) {
     bytes.reserve(8);
     EXPECT_STREQ("WORLDS", bytes.dataChar());
 }
-void mover(std::string &&){
 
-}
 void foo(const ByteArray& data){
     int i(data.size());
 }
@@ -103,13 +102,16 @@ TEST(Test_ByteArray, 8) {
     ByteArray newBytes1 = std::move(newBytes);
     EXPECT_EQ(newBytes.size(), 0);
     EXPECT_EQ(newBytes1.size(), 5);
-    const ByteArray constByte{"HELLO"};
+    const ByteArray constByte{"HELLO",5 };
     ByteArray fromConstByte(constByte);
     ByteArray sss{"asdasd",6 };
     foo(fromConstByte);
     foo1(std::move(sss));
     EXPECT_EQ(sss.size(), 6);
     EXPECT_EQ(newBytes1.size(), 5);
+}
+TEST(Test_ByteArray, 9) {
+    ByteArray bytes{"WORLD"};
 }
 
 TEST(Test_Debug, 0) {
@@ -161,6 +163,16 @@ TEST(Test_BitSet64, 0) {
     ByteArray test{"alekos",6};
     BitSet64 bits(test.data(),test.size());
     Log()<<bits;
+    char string[8];
+    bits.toChar(string);
+    Log()<<string;
+    EXPECT_TRUE(true);
+}
+
+TEST(Test_BitSet64, 1) {
+    ByteArray test{"alekos",6};
+    BitSet64 bits(test.data(),test.size());
+    Log()<<bits[0];
     char string[8];
     bits.toChar(string);
     Log()<<string;

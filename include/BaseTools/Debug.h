@@ -47,7 +47,7 @@ namespace BaseTools {
 
     class Impl_Temp{
     public:
-        Impl_Temp(Impl_Logger* stream);
+        explicit Impl_Temp(Impl_Logger* stream);
         ~Impl_Temp();
         void setSeparator(char);
         void setEndLine(char);
@@ -66,6 +66,11 @@ namespace BaseTools {
 //#endif
         return std::move(tmp);
     }
+    /**
+     * Функция для вывода цвета
+     * @param color набор цветов для текста
+     * @return данные в поток вывода
+     */
     Impl_Temp Log(COLOR color = COLOR::None);
 }
 #endif //BASETOOLS_DEBUG_H

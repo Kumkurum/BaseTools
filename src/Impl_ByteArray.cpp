@@ -4,16 +4,18 @@
 #include <cstring>
 #include "Impl_ByteArray.h"
 #include <string>
-
+#ifndef NDEBUG
+#include <assert.h>
+#endif
 constexpr char  hex_chars[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 namespace BaseTools {
-    ByteArray::Impl_ByteArray::Impl_ByteArray(char symbol, std::size_t size):_size{size} {
+    ByteArray::Impl_ByteArray::Impl_ByteArray(const char symbol, std::size_t size):_size{size} {
         _buffer = new std::byte[_size];
         for(auto i{0}; i < _size; ++i)
             _buffer[i] = static_cast<std::byte>(symbol);
     }
 
-    ByteArray::Impl_ByteArray::Impl_ByteArray(std::byte *byteArray, std::size_t size):_size{size} {
+    ByteArray::Impl_ByteArray::Impl_ByteArray(const std::byte *byteArray, std::size_t size):_size{size} {
         _buffer = new std::byte[_size];
         memcpy(_buffer, byteArray, _size);
     }
@@ -28,7 +30,7 @@ namespace BaseTools {
     }
 
     ByteArray::Impl_ByteArray* ByteArray::Impl_ByteArray::operator+(const Impl_ByteArray* another) {
-        auto tmp = new std::byte [_size + another->_size];;
+        auto tmp = new std::byte [_size + another->_size];
         auto* newByteArray = new ByteArray::Impl_ByteArray();
         newByteArray->_buffer = tmp;
         newByteArray->_size = _size + another->_size;
@@ -50,11 +52,14 @@ namespace BaseTools {
         return copy;
     }
 
-    std::size_t ByteArray::Impl_ByteArray::size() {
+    std::size_t ByteArray::Impl_ByteArray::size() const {
         return _size;
     }
 
     std::byte& ByteArray::Impl_ByteArray::operator[](std::size_t index) {
+#ifndef NDEBUG
+        assert(index >= 0 && index< _size && "Выход за границу блока данных!");
+#endif
         return _buffer[index];
     }
 

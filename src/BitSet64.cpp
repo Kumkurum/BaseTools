@@ -5,6 +5,9 @@
 #include "../include/BaseTools/BitSet64.h"
 #include "../include/BaseTools/Debug.h"
 #include <bitset>
+#ifndef NDEBUG
+#include <assert.h>
+#endif
 namespace BaseTools {
     BitSet64::BitSet64(const std::byte *byte, int size) {
         if (size >= 8) {
@@ -18,7 +21,10 @@ namespace BaseTools {
         }
     }
 
-    bool BitSet64::operator[](size_t index) {
+    bool BitSet64::operator[](size_t index) const {
+#ifndef NDEBUG
+        assert(index >= 0 && index <= 63 && "Выход за границу блока данных!" );
+#endif
         return (_bits>>(index)) & 1;
     }
 
@@ -39,6 +45,6 @@ namespace BaseTools {
     }
     void BitSet64::toChar(char* ptr) const {
         for(int i{0}; i < 8; ++i)
-            ptr[7 - i] = _bits>>8*i;
+            ptr[7 - i] = static_cast<char>(_bits>>8*i);
     }
 }
