@@ -1,41 +1,51 @@
 #include <benchmark/benchmark.h>
 #include <string>
 #include "../include/BaseTools/ByteArray.h"
-//#include <QtCore>
-#include <vector>
-using namespace std;
 
-static void BM_arrayPlus(benchmark::State& state) {
-    for (auto _ : state){
-        BaseTools::ByteArray array{"append", 5};
-        array = array + array;
-    }
-}
-//BENCHMARK(BM_arrayPlus); //Used to register test function
 
-struct TestStruct{
-    int x{2};
-    int y{1};
-    int z{0};
+
+struct TestSmall{
+    long x{};
+    int y{};
+    int z{};
 };
-static void QVector_PUSH(benchmark::State& state) {
-    QVector< TestStruct> vector;
-    for (auto _ : state){
+void fooLV(BaseTools::ByteArray& testSmall){
+    testSmall[0]= std::byte('0');
+    testSmall[1]= std::byte('0');
+    testSmall[2]= std::byte('0');
+    testSmall[3]= std::byte('0');
+    testSmall[4]= std::byte('0');
+}
 
-        vector.push_back(TestStruct{});
+void fooRV(BaseTools::ByteArray testSmall){
+    testSmall[0]= std::byte('0');
+    testSmall[1]= std::byte('0');
+    testSmall[2]= std::byte('0');
+    testSmall[3]= std::byte('0');
+    testSmall[4]= std::byte('0');
+//    return testSmall;
+}
+
+
+static void LVFOO(benchmark::State& state) {
+    for (auto _: state){
+        BaseTools::ByteArray testArray{"asdasdasdasdasd", 15};
+        fooLV(testArray);
     }
 }
-BENCHMARK(QVector_PUSH); //Used to register test function
 
 
-static void STDVector_PUSH(benchmark::State& state) {
-    std::vector< TestStruct> vector;
-    for (auto _ : state){
-        vector.push_back(TestStruct{});
+static void RVFOO(benchmark::State& state) {
+    for (auto _: state) {
+        BaseTools::ByteArray testArray{"asdasdasdasdasd", 15};
+        fooRV(std::move(testArray));
     }
-}
-BENCHMARK(STDVector_PUSH); //Used to register test function
 
+}
+
+
+BENCHMARK(LVFOO); //Used to register test function
+BENCHMARK(RVFOO); //Used to register test function
 // Register the function as a benchmark
 
 BENCHMARK_MAIN(); //Program entry

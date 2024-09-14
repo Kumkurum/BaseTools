@@ -23,7 +23,8 @@ namespace BaseTools {
     ByteArray::~ByteArray() = default;
     ByteArray::ByteArray(ByteArray &&_rhs)noexcept{
         _pImpl = std::move(_rhs._pImpl);
-        _rhs._pImpl = std::make_unique<Impl_ByteArray>();
+        _rhs._pImpl.reset();
+//        _rhs._pImpl = std::make_unique<Impl_ByteArray>();
     }
     ByteArray &ByteArray::operator=(ByteArray &&_rhs)noexcept= default;
 

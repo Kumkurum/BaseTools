@@ -24,7 +24,9 @@ if (${BENCHMARK})
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core)
     file(GLOB SOURCE_TEST benchmarks/* src/* include/${PROJECT_NAME}/*)
     add_executable(Bench_${PROJECT_NAME}  ${SOURCE_TEST})
-    set(CMAKE_CXX_FLAGS_DEBUG "-O3")
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
     target_link_libraries(Bench_${PROJECT_NAME}
             benchmark
             pthread

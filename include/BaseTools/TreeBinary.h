@@ -78,4 +78,100 @@ namespace BaseTools {
     };
 }
 */
+
+
+#include <type_traits>
+#include <utility>
+#define DEFINE_HAS_MEMBER(member)                               \
+template<typename, typename = std::void_t<>>                    \
+        struct HasMemberT_##member                              \
+                :std::false_type{};                             \
+template<typename T>                                            \
+struct HasMemberT_##member<T,std::void_t<decltype(&T::member)>> \
+        :std::true_type{}
+
+
+template<typename, typename = std::void_t<>>
+struct HasBeginT : std::false_type {};
+
+template<typename T>
+struct HasBeginT<T, std::void_t<decltype(std::declval<T>().begin())>> : std::true_type {};
+
+
+
+
+#include "iostream"
+
+
+class NotVirtual{
+
+};
+
+class Virtual{
+public:
+    virtual void foo(){};
+};
+
+
+
+template<typename... Mixins>
+class Base : public Mixins...{
+public:
+    void foo(){
+        std::cout<<"Base::FOO"<<std::endl;
+    }
+};
+
+template<typename... Mixins>
+class Derived : public Base<Mixins...>{
+public:
+    void foo(){
+        std::cout<<"Derived::FOO"<<std::endl;
+    }
+};
+
+
+
+template<typename T, typename... Args>
+class FunctionBridge{
+public:
+    virtual ~FunctionBridge(){}
+    virtual FunctionBridge* clone() const = 0;
+    virtual T invoke(Args... args) const = 0;
+};
+
+
+
+template<typename Signature>
+class FunctionPtr;
+
+
+template<typename T, typename... Args>
+class FunctionPtr<T(Args...)>{
+private:
+    FunctionBridge<T, Args...>* bridge;
+public:
+    FunctionPtr():bridge{nullptr}{}
+    FunctionPtr(FunctionPtr const& other);
+    FunctionPtr& operator=(FunctionPtr const& other){
+        FunctionPtr tmp(other);
+        std::swap(*this, tmp);
+        return *this;
+    }
+
+
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
 #endif //BASETOOLS_TREEBINARY_H
